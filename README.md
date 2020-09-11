@@ -1,6 +1,6 @@
 # dart_lnurl
 
-A Dart implementation of lnurl helpers to decode bech32 lnurl strings. Currently supports the following tags:
+A Dart implementation of lnurl to decode bech32 lnurl strings. Currently supports the following tags:
 * withdrawRequest
 * payRequest
 * channelRequest
