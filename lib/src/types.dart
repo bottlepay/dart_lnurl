@@ -100,7 +100,7 @@ class LNURLPayResult {
 }
 
 /// The result returned when you call getParams. The correct response
-/// time will be non-null and the rest will be null.
+/// item will be non-null and the rest will be null.
 ///
 /// If error is non-null then an error occurred while calling the lnurl service.
 class LNURLParseResult {
