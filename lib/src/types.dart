@@ -111,9 +111,9 @@ class LNURLParseResult {
     this.channelParams,
     this.error,
   });
-  final LNURLWithdrawParams withdrawalParams;
-  final LNURLPayParams payParams;
-  final LNURLAuthParams authParams;
-  final LNURLChannelParams channelParams;
-  final LNURLErrorResponse error;
+  final LNURLWithdrawParams? withdrawalParams;
+  final LNURLPayParams? payParams;
+  final LNURLAuthParams? authParams;
+  final LNURLChannelParams? channelParams;
+  final LNURLErrorResponse? error;
 }

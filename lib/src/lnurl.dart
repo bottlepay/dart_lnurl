@@ -6,7 +6,7 @@ String findLnUrl(String input) {
   ).allMatches(input.toLowerCase());
 
   if (res.length == 1) {
-    return res.first.group(0);
+    return res.first.group(0)!;
   } else {
     throw ArgumentError('Not a valid lnurl string');
   }

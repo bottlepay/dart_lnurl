@@ -13,6 +13,6 @@ EncryptedResult encrypt(String plainText, String key) {
 
 /// Holds an encryption result
 class EncryptedResult {
-  String iv;
-  String cipherText;
+  String? iv;
+  String? cipherText;
 }

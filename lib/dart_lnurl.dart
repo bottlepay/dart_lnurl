@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 
 export 'src/types.dart';
 export 'src/success_action.dart';
+export 'src/bech32.dart';
 
 /// Get params from a lnurl string. Possible types are:
 /// * `LNURLResponse`
