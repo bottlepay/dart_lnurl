@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dart_lnurl/dart_lnurl.dart';
 import 'package:dart_lnurl/src/lnurl.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -58,10 +60,13 @@ void main() async {
 
     test('should interrupt after timeout', () async {
       final notExistingUrl = 'lnurl1dp68gurn8ghj7etcv9khqmr99e3k7mf0d3h82unvq257ls';
-      final res = await getParams(notExistingUrl, timeout: Duration(milliseconds: 10));
+      res() => getParams(notExistingUrl, timeout: Duration(milliseconds: 10));
 
-      expect(res.error, isNotNull);
-      expect(res.error?.reason, 'https://example.com/lnurl returned error: TimeoutException after 0:00:00.010000: Future not completed');
+      expect(res, throwsA(predicate((e) =>
+        e is TimeoutException
+        && e.message == 'Future not completed'
+        && e.toString() == 'TimeoutException after 0:00:00.010000: Future not completed'
+      )));
     });
   });
 }

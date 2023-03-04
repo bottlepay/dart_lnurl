@@ -90,6 +90,8 @@ Future<LNURLParseResult> getParams(String encodedUrl, {Duration? timeout}) async
 
         throw Exception('Unknown tag: ${parsedJson['tag']}');
     }
+  } on TimeoutException {
+    rethrow;
   } catch (e) {
     return LNURLParseResult(
       error: LNURLErrorResponse.fromJson({
