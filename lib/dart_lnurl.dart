@@ -1,5 +1,6 @@
 library dart_lnurl;
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bech32/bech32.dart';
@@ -19,8 +20,11 @@ export 'src/bech32.dart';
 /// * `LNURLAuthParams`
 /// * `LNURLPayParams`
 ///
+/// If [timeout] is provided, then [TimeoutException] is being thrown
+/// when request does not complete within specified timeout.
+///
 /// Throws [ArgumentError] if the provided input is not a valid lnurl.
-Future<LNURLParseResult> getParams(String encodedUrl) async {
+Future<LNURLParseResult> getParams(String encodedUrl, {Duration? timeout}) async {
   /// Try to parse the input as a lnUrl. Will throw an error if it fails.
   final lnUrl = findLnUrl(encodedUrl);
 
@@ -30,7 +34,8 @@ Future<LNURLParseResult> getParams(String encodedUrl) async {
 
   try {
     /// Call the lnurl to get a response
-    final res = await http.get(decodedUri);
+    final call = http.get(decodedUri);
+    final res = await (timeout == null ? call : call.timeout(timeout));
 
     /// If there's an error then throw it
     if (res.statusCode >= 300) {
