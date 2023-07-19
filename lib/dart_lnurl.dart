@@ -13,9 +13,23 @@ export 'src/success_action.dart';
 export 'src/bech32.dart';
 
 Uri decodeUri(String encodedUrl) {
+  /// The URL can possibily be already decoded as per LUD-17: Protocol schemes and raw (non bech32-encoded) URLs.
+  /// https://github.com/lnurl/luds/blob/luds/17.md
+  /// Handle already decoded LNURL if they start with defined prefixes
+  var lud17prefixes = ['lnurlw://', 'lnurlc://', 'lnurlp://', 'keyauth://'];
   late final Uri decodedUri;
-  if (encodedUrl.startsWith('lnurlw://')) {
-    decodedUri = Uri.parse(encodedUrl.replaceFirst('lnurlw://', 'https://'));
+
+  /// If the decoded LNURL is a Tor address, the port has to be http instead of https for the clearnet LNURL so check the .onion in URL also
+  var protocol = (encodedUrl.contains('.onion') && !encodedUrl.contains('.onion.')) ? 'http://' : 'https://';
+  var urlprefix = "";
+  for (var prefix in lud17prefixes){
+     if (encodedUrl.startsWith(prefix)) {
+        urlprefix = prefix;
+     }
+  }
+  if (encodedUrl.startsWith(urlprefix)) {
+    /// Already decoded LNURL so just return a string starting with http or https (LUD-17 compatibility)
+    decodedUri = Uri.parse(encodedUrl.replaceFirst(urlprefix, protocol));
   } else {
     /// Try to parse the input as a lnUrl. Will throw an error if it fails.
     final lnUrl = findLnUrl(encodedUrl);
@@ -23,8 +37,7 @@ Uri decodeUri(String encodedUrl) {
     /// Decode the lnurl using bech32
     final bech32 = Bech32Codec().decode(lnUrl, lnUrl.length);
     decodedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
-  }
-
+  }   
   return decodedUri;
 }
 
