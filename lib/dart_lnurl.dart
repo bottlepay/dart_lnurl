@@ -16,20 +16,16 @@ Uri decodeUri(String encodedUrl) {
   /// The URL can possibily be already decoded as per LUD-17: Protocol schemes and raw (non bech32-encoded) URLs.
   /// https://github.com/lnurl/luds/blob/luds/17.md
   /// Handle already decoded LNURL if they start with defined prefixes
-  var lud17prefixes = ['lnurlw://', 'lnurlc://', 'lnurlp://', 'keyauth://'];
+  final lud17prefixes = ['lnurlw', 'lnurlc', 'lnurlp', 'keyauth'];
+  
+  /// If the decoded LNURL is a Tor address, the port has to be http instead of https for the clearnet LNURL so check the .onion in URL also
+  final urifromstring = Uri.parse(encodedUrl);
+  final protocol = urifromstring.host.endsWith('onion.') || urifromstring.host.endsWith('onion') ? 'http://' : 'https://';
   late final Uri decodedUri;
 
-  /// If the decoded LNURL is a Tor address, the port has to be http instead of https for the clearnet LNURL so check the .onion in URL also
-  var protocol = (encodedUrl.contains('.onion') && !encodedUrl.contains('.onion.')) ? 'http://' : 'https://';
-  var urlprefix = "";
-  for (var prefix in lud17prefixes){
-     if (encodedUrl.startsWith(prefix)) {
-        urlprefix = prefix;
-     }
-  }
-  if (encodedUrl.startsWith(urlprefix)) {
-    /// Already decoded LNURL so just return a string starting with http or https (LUD-17 compatibility)
-    decodedUri = Uri.parse(encodedUrl.replaceFirst(urlprefix, protocol));
+  if (lud17prefixes.contains(urifromstring.scheme)) {
+    /// Already decoded LNURL so just return a string starting with http or https (LUD-17 compatibility) instead of the lud17 prefix
+    decodedUri = Uri.parse(encodedUrl.replaceFirst(urifromstring.scheme, protocol));
   } else {
     /// Try to parse the input as a lnUrl. Will throw an error if it fails.
     final lnUrl = findLnUrl(encodedUrl);
