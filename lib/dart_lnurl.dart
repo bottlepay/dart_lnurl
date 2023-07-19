@@ -21,12 +21,17 @@ export 'src/bech32.dart';
 ///
 /// Throws [ArgumentError] if the provided input is not a valid lnurl.
 Future<LNURLParseResult> getParams(String encodedUrl) async {
-  /// Try to parse the input as a lnUrl. Will throw an error if it fails.
-  final lnUrl = findLnUrl(encodedUrl);
+  Uri decodedUri;
+  if (encodedUrl.startsWith('lnurlw://')) {
+    decodedUri = Uri.parse(encodedUrl.replaceFirst('lnurlw://', 'https://'));
+  } else {
+    /// Try to parse the input as a lnUrl. Will throw an error if it fails.
+    final lnUrl = findLnUrl(encodedUrl);
 
-  /// Decode the lnurl using bech32
-  final bech32 = Bech32Codec().decode(lnUrl, lnUrl.length);
-  final decodedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
+    /// Decode the lnurl using bech32
+    final bech32 = Bech32Codec().decode(lnUrl, lnUrl.length);
+    decodedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
+  }
 
   try {
     /// Call the lnurl to get a response
