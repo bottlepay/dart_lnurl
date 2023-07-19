@@ -73,12 +73,12 @@ class LNURLPayParams {
 /// A success action will be returned when making a call to the lnUrl callback url.
 class LNURLPaySuccessAction {
   LNURLPaySuccessAction.fromJson(Map<String, dynamic> json)
-      : tag = json['tag'],
-        description = json['description'],
-        url = json['url'],
-        message = json['message'],
-        cipherText = json['cipherText'],
-        iv = json['iv'];
+      : tag = json['tag'] ?? '',
+        description = json['description'] ?? '',
+        url = json['url'] ?? '',
+        message = json['message'] ?? '',
+        cipherText = json['cipherText'] ?? '',
+        iv = json['iv'] ?? '';
   final String tag;
   final String description;
   final String url;

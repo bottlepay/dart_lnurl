@@ -12,16 +12,8 @@ export 'src/types.dart';
 export 'src/success_action.dart';
 export 'src/bech32.dart';
 
-/// Get params from a lnurl string. Possible types are:
-/// * `LNURLResponse`
-/// * `LNURLChannelParams`
-/// * `LNURLWithdrawParams`
-/// * `LNURLAuthParams`
-/// * `LNURLPayParams`
-///
-/// Throws [ArgumentError] if the provided input is not a valid lnurl.
-Future<LNURLParseResult> getParams(String encodedUrl) async {
-  Uri decodedUri;
+Uri decodeUri(String encodedUrl) {
+  late final Uri decodedUri;
   if (encodedUrl.startsWith('lnurlw://')) {
     decodedUri = Uri.parse(encodedUrl.replaceFirst('lnurlw://', 'https://'));
   } else {
@@ -33,6 +25,19 @@ Future<LNURLParseResult> getParams(String encodedUrl) async {
     decodedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
   }
 
+  return decodedUri;
+}
+
+/// Get params from a lnurl string. Possible types are:
+/// * `LNURLResponse`
+/// * `LNURLChannelParams`
+/// * `LNURLWithdrawParams`
+/// * `LNURLAuthParams`
+/// * `LNURLPayParams`
+///
+/// Throws [ArgumentError] if the provided input is not a valid lnurl.
+Future<LNURLParseResult> getParams(String encodedUrl) async {
+  final decodedUri = decodeUri(encodedUrl);
   try {
     /// Call the lnurl to get a response
     final res = await http.get(decodedUri);

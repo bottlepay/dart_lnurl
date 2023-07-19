@@ -4,7 +4,7 @@ import 'package:encrypt/encrypt.dart';
 
 /// Given a success action, will return the decrypted AES payload.
 /// The preimage is the key to decrypt the data.
-decryptSuccessActionAesPayload({
+String decryptSuccessActionAesPayload({
   required LNURLPaySuccessAction successAction,
   required String preimage,
 }) {
