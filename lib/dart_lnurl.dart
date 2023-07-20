@@ -20,6 +20,11 @@ Uri decodeUri(String encodedUrl) {
   /// Handle non bech32-encoded LNURL
   final lud17prefixes = ['lnurlw', 'lnurlc', 'lnurlp', 'keyauth'];
   decodedUri = Uri.parse(encodedUrl);
+  for (final prefix in lud17prefixes) {
+    if (decodedUri.scheme.contains(prefix)) {
+      decodedUri = decodedUri.replace(scheme: prefix);
+    }
+  }
   if (lud17prefixes.contains(decodedUri.scheme)) {
     /// If the non-bech32 LNURL is a Tor address, the port has to be http instead of https for the clearnet LNURL so check if the host ends with '.onion' or '.onion.'
     decodedUri = decodedUri.replace(
