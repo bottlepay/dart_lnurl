@@ -5,6 +5,25 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() {
+  test('should handle lnurlw://', () async {
+    final url =
+        'lnurlw://lnbits.btcslovnik.cz/boltcards/api/v1/scan/wpyeilzhasqu8rgsmfqbv9?p=D13EFAAEC499E07F611B279BA3EE982C&c=DF6C74D375DF8300';
+    final res = await getParams(url);
+    expect(res.error?.reason, 'This link is already used.');
+  });
+
+  test('should handle lnurlp://', () async {
+    final url = 'lnurlp://lnbits.cz/lnurlp/357';
+    final res = await getParams(url);
+    expect(res.payParams?.tag, 'payRequest');
+  });
+
+  test('should handle lnurlp:// with additional non-related prefix', () async {
+    final url = 'enlnurlp://lnbits.cz/lnurlp/357';
+    final res = await getParams(url);
+    expect(res.payParams?.tag, 'payRequest');
+  });
+
   test('should match lnurl without lightning:', () {
     final lnurl =
         'lnurl1dp68gurn8ghj7mrww4exctt5dahkccn00qhxget8wfjk2um0veax2un09e3k7mf0w5lhz0t9xcekzv34vgcx2vfkvcurxwphvgcrwefjvgcnqwrpxqmkxven89skgvp3vs6nwvpjvy6njdfsx5ekgephvcurxdf5xcerwvecvyunsf32lqq';

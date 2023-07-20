@@ -65,6 +65,18 @@ Future<LNURLParseResult> getParams(String encodedUrl) async {
     /// Parse the response body to json
     Map<String, dynamic> parsedJson = json.decode(res.body);
 
+    if (parsedJson['status'] == 'ERROR') {
+      return LNURLParseResult(
+        error: LNURLErrorResponse.fromJson({
+          ...parsedJson,
+          ...{
+            'domain': decodedUri.host,
+            'url': decodedUri.toString(),
+          }
+        }),
+      );
+    }
+
     /// If it contains a callback then add the domain as a key
     if (parsedJson['callback'] != null) {
       parsedJson['domain'] = Uri.parse(parsedJson['callback']).host;
