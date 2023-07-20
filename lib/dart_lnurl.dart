@@ -24,8 +24,8 @@ Uri decodeUri(String encodedUrl) {
     /// If the non-bech32 LNURL is a Tor address, the port has to be http instead of https for the clearnet LNURL so check if the host ends with '.onion' or '.onion.'
     final protocol = urifromstring.host.endsWith('onion.') ||
             urifromstring.host.endsWith('onion')
-        ? 'http://'
-        : 'https://';
+        ? 'http'
+        : 'https';
 
     /// Non-bech32 LNURL so just return a string starting with http or https (LUD-17 compatibility) instead of the lud17 prefix
     decodedUri =
