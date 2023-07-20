@@ -1,6 +1,6 @@
 name: dart_lnurl
 description: A Dart implementation of lnurl to decode bech32 lnurl strings.
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/bottlepay/dart_lnurl
 
 environment:
