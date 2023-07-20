@@ -9,7 +9,9 @@ A Dart implementation of lnurl to decode bech32 lnurl strings. Currently support
 
 ## Features
 * ✅ Decode a bech32-encoded lnurl string.
+* ✅ Handles LUD-17 non-bech32 lnurl string (lnurlw, lnurlp, lnurlc, keyauth).
 * ✅ Make GET request to the decoded ln service and return the response.
+
 
 
 Learn more about the lnurl spec here: https://github.com/btcontract/lnurl-rfc
