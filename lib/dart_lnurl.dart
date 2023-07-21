@@ -18,11 +18,12 @@ Uri decodeUri(String encodedUrl) {
   /// The URL doesn't have to be encoded at all as per LUD-17: Protocol schemes and raw (non bech32-encoded) URLs.
   /// https://github.com/lnurl/luds/blob/luds/17.md
   /// Handle non bech32-encoded LNURL
-  final lud17prefixes = ['lnurlw', 'lnurlc', 'lnurlp', 'keyauth'];
+  final lud17prefixes = ['lnurlw', 'lnurlp', 'keyauth', 'lnurlc'];
   decodedUri = Uri.parse(encodedUrl);
   for (final prefix in lud17prefixes) {
     if (decodedUri.scheme.contains(prefix)) {
       decodedUri = decodedUri.replace(scheme: prefix);
+      break;
     }
   }
   if (lud17prefixes.contains(decodedUri.scheme)) {
