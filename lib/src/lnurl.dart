@@ -39,19 +39,23 @@ String findLnUrlNonBech32(String input) {
 }
 
 bool isbech32(String input) {
-  String bech32 = '';
-  final res = new RegExp(
+  final match = new RegExp(
     r',*?((lnurl)([0-9]{1,}[a-z0-9]+){1})',
   ).allMatches(input.toLowerCase());
-  if (res.length == 1) {
+  if (match.length == 1) {
+    print(match.first.group(0));
+    // get the lnurl string from the regex
+    String lnurlBech32 = match.first.group(0)!;
+    String lnurlDecoded = '';
     try {
-      bech32 = Bech32Codec()
-          .decode(res.first.group(0)!.toLowerCase(), res.first.group(0)!.length)
+      // try to decode lowercased bech32 and store it to
+      lnurlDecoded = Bech32Codec()
+          .decode(lnurlBech32.toLowerCase(), lnurlBech32.length)
           .toString();
     } catch (e) {
       throw ArgumentError('Error when decoding bech32 lnurl');
     }
-    if (!bech32.isEmpty) {
+    if (!lnurlDecoded.isNotEmpty) {
       return true;
     }
   }
