@@ -1,7 +1,7 @@
 # dart_lnurl
 [![pub package](https://img.shields.io/badge/pub-0.0.1-blueviolet.svg)](https://pub.dev/packages/dart_lnurl)
 
-A Dart implementation of lnurl to decode and bech32 lnurl strings. Currently supports the following tags:
+A Dart implementation of lnurl to decode bech32 and parse non-bech32 lnurl strings. Currently supports the following tags:
 * withdrawRequest
 * payRequest
 * channelRequest
