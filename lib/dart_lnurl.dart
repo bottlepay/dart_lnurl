@@ -12,7 +12,7 @@ export 'src/types.dart';
 export 'src/success_action.dart';
 export 'src/bech32.dart';
 
-Uri parseLnurl(String input) {
+Uri parseLnUri(String input) {
   Uri parsedUri;
   //Handle the cases when Uri doesn't have to be bech32 encoded, as per LUD-17
   if (!isbech32(input)) {
@@ -40,7 +40,7 @@ Uri parseLnurl(String input) {
 ///
 /// Throws [ArgumentError] if the provided input is not a valid lnurl.
 Future<LNURLParseResult> getParams(String url) async {
-  final parsedUri = parseLnurl(url);
+  final parsedUri = parseLnUri(url);
   try {
     /// Call the lnurl to get a response
     final res = await http.get(parsedUri);
