@@ -13,12 +13,12 @@ export 'src/success_action.dart';
 export 'src/bech32.dart';
 
 Uri parseLnurl(String input) {
-  Uri parsedUrl;
+  Uri parsedUri;
   //Handle the cases when Uri doesn't have to be bech32 encoded, as per LUD-17
   if (!isbech32(input)) {
     /// Non-Bech32 encoded URL
     final String lnUrl = findLnUrlNonBech32(input);
-    parsedUrl = Uri.parse(lnUrl);
+    parsedUri = Uri.parse(lnUrl);
   } else {
     /// Bech32 encoded URL
     /// Try to parse the input as a lnUrl. Will throw an error if it fails.
@@ -26,9 +26,9 @@ Uri parseLnurl(String input) {
 
     /// Decode the lnurl using bech32
     final bech32 = Bech32Codec().decode(lnUrl, lnUrl.length);
-    parsedUrl = Uri.parse(utf8.decode(fromWords(bech32.data)));
+    parsedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
   }
-  return parsedUrl;
+  return parsedUri;
 }
 
 /// Get params from a lnurl string. Possible types are:
@@ -40,10 +40,10 @@ Uri parseLnurl(String input) {
 ///
 /// Throws [ArgumentError] if the provided input is not a valid lnurl.
 Future<LNURLParseResult> getParams(String url) async {
-  final parsedUrl = parseLnurl(url);
+  final parsedUri = parseLnurl(url);
   try {
     /// Call the lnurl to get a response
-    final res = await http.get(parsedUrl);
+    final res = await http.get(parsedUri);
 
     /// If there's an error then throw it
     if (res.statusCode >= 300) {
@@ -58,8 +58,8 @@ Future<LNURLParseResult> getParams(String url) async {
         error: LNURLErrorResponse.fromJson({
           ...parsedJson,
           ...{
-            'domain': parsedUrl.host,
-            'url': parsedUrl.toString(),
+            'domain': parsedUri.host,
+            'url': parsedUri.toString(),
           }
         }),
       );
@@ -101,8 +101,8 @@ Future<LNURLParseResult> getParams(String url) async {
             error: LNURLErrorResponse.fromJson({
               ...parsedJson,
               ...{
-                'domain': parsedUrl.host,
-                'url': parsedUrl.toString(),
+                'domain': parsedUri.host,
+                'url': parsedUri.toString(),
               }
             }),
           );
@@ -114,9 +114,9 @@ Future<LNURLParseResult> getParams(String url) async {
     return LNURLParseResult(
       error: LNURLErrorResponse.fromJson({
         'status': 'ERROR',
-        'reason': '${parsedUrl.toString()} returned error: ${e.toString()}',
-        'url': parsedUrl.toString(),
-        'domain': parsedUrl.host,
+        'reason': '${parsedUri.toString()} returned error: ${e.toString()}',
+        'url': parsedUri.toString(),
+        'domain': parsedUri.host,
       }),
     );
   }

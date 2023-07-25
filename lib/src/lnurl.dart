@@ -18,22 +18,22 @@ String findLnUrlNonBech32(String input) {
   /// Handle non bech32-encoded LNURL
 
   final lud17prefixes = ['lnurlw', 'lnurlp', 'keyauth', 'lnurlc'];
-  Uri decodedUri = Uri.parse(input);
+  Uri parsedUri = Uri.parse(input);
   for (final prefix in lud17prefixes) {
-    if (decodedUri.scheme.contains(prefix)) {
-      decodedUri = decodedUri.replace(scheme: prefix);
+    if (parsedUri.scheme.contains(prefix)) {
+      parsedUri = parsedUri.replace(scheme: prefix);
       break;
     }
   }
-  if (lud17prefixes.contains(decodedUri.scheme)) {
+  if (lud17prefixes.contains(parsedUri.scheme)) {
     /// If the non-bech32 LNURL is a Tor address, the port has to be http instead of https for the clearnet LNURL so check if the host ends with '.onion' or '.onion.'
-    decodedUri = decodedUri.replace(
-        scheme: decodedUri.host.endsWith('onion') ||
-                decodedUri.host.endsWith('onion.')
+    parsedUri = parsedUri.replace(
+        scheme: parsedUri.host.endsWith('onion') ||
+                parsedUri.host.endsWith('onion.')
             ? 'http'
             : 'https');
   }
-  return decodedUri.toString();
+  return parsedUri.toString();
 }
 
 bool isbech32(String input) {
