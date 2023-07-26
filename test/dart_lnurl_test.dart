@@ -50,6 +50,71 @@ void main() {
     final res = parseLnUri(url);
     expect(res, Uri.parse('https://lnbits.cz/lnurlw/357'));
   });
+  test('should handle static lnurlw with lightning:', () async {
+    final url =
+        'lightning:LNURL1DP68GURN8GHJ7MRWVF5HGUEWVF6XXURVV96XY7FWVDAZ7AMFW35XGUNPWUHKZURF9AMRZTMVDE6HYMP0GF8Y5V63FFX9WKT5FDTHXD3CVF9XG42DW9VSN09NNG';
+    final res = parseLnUri(url);
+    expect(
+        res,
+        Uri.parse(
+            'https://lnbits.btcplatby.cz/withdraw/api/v1/lnurl/BNJ3QJLWYtKWs68bJdUMqY'));
+  });
+
+  test(
+      'should handle static lnurlw with lightning: and with additional non-related prefix',
+      () async {
+    final url =
+        'enlightning:LNURL1DP68GURN8GHJ7MRWVF5HGUEWVF6XXURVV96XY7FWVDAZ7AMFW35XGUNPWUHKZURF9AMRZTMVDE6HYMP0GF8Y5V63FFX9WKT5FDTHXD3CVF9XG42DW9VSN09NNG';
+    final res = parseLnUri(url);
+    expect(
+        res,
+        Uri.parse(
+            'https://lnbits.btcplatby.cz/withdraw/api/v1/lnurl/BNJ3QJLWYtKWs68bJdUMqY'));
+  });
+
+  test('should handle static onion lnurlw with lightning:', () async {
+    final url =
+        'lightning:LNURL1DP68GUP69UHKCMNZD968XTNZW33HQMRPW338J7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC9EHKU6T0DCHHW6T5DPJ8YCTH9ASHQ6F0WCCJ7MRWW4EXCT6ZFE9RX522F3T4JAZT2AENVWRZFFJ92NT3TYXRL2DG';
+    final res = parseLnUri(url);
+    expect(
+        res,
+        Uri.parse(
+            'http://lnbits.btcplatbyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.onion/withdraw/api/v1/lnurl/BNJ3QJLWYtKWs68bJdUMqY'));
+  });
+
+  test(
+      'should handle static onion lnurlw with lightning:  and with additional non-related prefix',
+      () async {
+    final url =
+        'enlightning:LNURL1DP68GUP69UHKCMNZD968XTNZW33HQMRPW338J7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC0PU8S7RC9EHKU6T0DCHHW6T5DPJ8YCTH9ASHQ6F0WCCJ7MRWW4EXCT6ZFE9RX522F3T4JAZT2AENVWRZFFJ92NT3TYXRL2DG';
+    final res = parseLnUri(url);
+    expect(
+        res,
+        Uri.parse(
+            'http://lnbits.btcplatbyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.onion/withdraw/api/v1/lnurl/BNJ3QJLWYtKWs68bJdUMqY'));
+  });
+
+  test('should handle static onion lowercase lnurlw with lightning:', () async {
+    final url =
+        'lightning:lnurl1dp68gup69uhkcmnzd968xtnzw33hqmrpw338j7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc9ehku6t0dchhw6t5dpj8ycth9ashq6f0wccj7mrww4exct6zfe9rx522f3t4jazt2aenvwrzffj92nt3tyxrl2dg';
+    final res = parseLnUri(url);
+    expect(
+        res,
+        Uri.parse(
+            'http://lnbits.btcplatbyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.onion/withdraw/api/v1/lnurl/BNJ3QJLWYtKWs68bJdUMqY'));
+  });
+
+  test(
+      'should handle static onion lowercase lnurlw with lightning and other non-related prefix:',
+      () async {
+    final url =
+        'enlightning:lnurl1dp68gup69uhkcmnzd968xtnzw33hqmrpw338j7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc0pu8s7rc9ehku6t0dchhw6t5dpj8ycth9ashq6f0wccj7mrww4exct6zfe9rx522f3t4jazt2aenvwrzffj92nt3tyxrl2dg';
+    final res = parseLnUri(url);
+    expect(
+        res,
+        Uri.parse(
+            'http://lnbits.btcplatbyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.onion/withdraw/api/v1/lnurl/BNJ3QJLWYtKWs68bJdUMqY'));
+  });
 
   test('should handle static lnurlw:// with additional non-related prefix',
       () async {

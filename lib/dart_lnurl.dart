@@ -15,11 +15,8 @@ export 'src/bech32.dart';
 Uri parseLnUri(String input) {
   Uri parsedUri;
   //Handle the cases when Uri doesn't have to be bech32 encoded, as per LUD-17
-  if (!isbech32(input)) {
-    /// Non-Bech32 encoded URL
-    final String lnUrl = findLnUrlNonBech32(input);
-    parsedUri = Uri.parse(lnUrl);
-  } else {
+
+  if (isbech32(input)) {
     /// Bech32 encoded URL
     /// Try to parse the input as a lnUrl. Will throw an error if it fails.
     final lnUrl = findLnUrl(input);
@@ -27,6 +24,10 @@ Uri parseLnUri(String input) {
     /// Decode the lnurl using bech32
     final bech32 = Bech32Codec().decode(lnUrl, lnUrl.length);
     parsedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
+  } else {
+    /// Non-Bech32 encoded URL
+    final String lnUrl = findLnUrlNonBech32(input);
+    parsedUri = Uri.parse(lnUrl);
   }
   return parsedUri;
 }
