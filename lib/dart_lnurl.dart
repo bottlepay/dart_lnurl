@@ -12,35 +12,24 @@ export 'src/types.dart';
 export 'src/success_action.dart';
 export 'src/bech32.dart';
 
-Uri decodeUri(String encodedUrl) {
-  Uri decodedUri;
+Uri parseLnUri(String input) {
+  Uri parsedUri;
+  //Handle the cases when Uri doesn't have to be bech32 encoded, as per LUD-17
 
-  /// The URL doesn't have to be encoded at all as per LUD-17: Protocol schemes and raw (non bech32-encoded) URLs.
-  /// https://github.com/lnurl/luds/blob/luds/17.md
-  /// Handle non bech32-encoded LNURL
-  final lud17prefixes = ['lnurlw', 'lnurlc', 'lnurlp', 'keyauth'];
-  decodedUri = Uri.parse(encodedUrl);
-  for (final prefix in lud17prefixes) {
-    if (decodedUri.scheme.contains(prefix)) {
-      decodedUri = decodedUri.replace(scheme: prefix);
-    }
-  }
-  if (lud17prefixes.contains(decodedUri.scheme)) {
-    /// If the non-bech32 LNURL is a Tor address, the port has to be http instead of https for the clearnet LNURL so check if the host ends with '.onion' or '.onion.'
-    decodedUri = decodedUri.replace(
-        scheme: decodedUri.host.endsWith('onion') ||
-                decodedUri.host.endsWith('onion.')
-            ? 'http'
-            : 'https');
-  } else {
+  if (isbech32(input)) {
+    /// Bech32 encoded URL
     /// Try to parse the input as a lnUrl. Will throw an error if it fails.
-    final lnUrl = findLnUrl(encodedUrl);
+    final lnUrl = findLnUrl(input);
 
     /// Decode the lnurl using bech32
     final bech32 = Bech32Codec().decode(lnUrl, lnUrl.length);
-    decodedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
+    parsedUri = Uri.parse(utf8.decode(fromWords(bech32.data)));
+  } else {
+    /// Non-Bech32 encoded URL
+    final String lnUrl = findLnUrlNonBech32(input);
+    parsedUri = Uri.parse(lnUrl);
   }
-  return decodedUri;
+  return parsedUri;
 }
 
 /// Get params from a lnurl string. Possible types are:
@@ -51,11 +40,11 @@ Uri decodeUri(String encodedUrl) {
 /// * `LNURLPayParams`
 ///
 /// Throws [ArgumentError] if the provided input is not a valid lnurl.
-Future<LNURLParseResult> getParams(String encodedUrl) async {
-  final decodedUri = decodeUri(encodedUrl);
+Future<LNURLParseResult> getParams(String url) async {
+  final parsedUri = parseLnUri(url);
   try {
     /// Call the lnurl to get a response
-    final res = await http.get(decodedUri);
+    final res = await http.get(parsedUri);
 
     /// If there's an error then throw it
     if (res.statusCode >= 300) {
@@ -70,8 +59,8 @@ Future<LNURLParseResult> getParams(String encodedUrl) async {
         error: LNURLErrorResponse.fromJson({
           ...parsedJson,
           ...{
-            'domain': decodedUri.host,
-            'url': decodedUri.toString(),
+            'domain': parsedUri.host,
+            'url': parsedUri.toString(),
           }
         }),
       );
@@ -113,8 +102,8 @@ Future<LNURLParseResult> getParams(String encodedUrl) async {
             error: LNURLErrorResponse.fromJson({
               ...parsedJson,
               ...{
-                'domain': decodedUri.host,
-                'url': decodedUri.toString(),
+                'domain': parsedUri.host,
+                'url': parsedUri.toString(),
               }
             }),
           );
@@ -126,9 +115,9 @@ Future<LNURLParseResult> getParams(String encodedUrl) async {
     return LNURLParseResult(
       error: LNURLErrorResponse.fromJson({
         'status': 'ERROR',
-        'reason': '${decodedUri.toString()} returned error: ${e.toString()}',
-        'url': decodedUri.toString(),
-        'domain': decodedUri.host,
+        'reason': '${parsedUri.toString()} returned error: ${e.toString()}',
+        'url': parsedUri.toString(),
+        'domain': parsedUri.host,
       }),
     );
   }
